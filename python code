@@ -1,0 +1,24 @@
+# Import required packages
+df_q = readFile(“Questions.csv”) df_t = readFile(“Tags.csv”)
+// group all tags given to same question into a single string
+grouped_tags = df_t.groupby('Id')
+grouped_tags = grouped_tags['Tag'].apply(tags = ' '.join(tags))
+// Drop unnecessary columns from questions
+df_q.drop(columns=[OwnerUserId, CreationDate, ClosedDate], inplace=True) // Merge questions and tags into a single dataframe
+df = df_q.merge(df_tags_final, on=’Id’) // get the most common 20 tags
+tag_features = getMostCommn(df, ”Tags”, 20)
+// Filter the tags from the dataset and remove all tags that does not belong to the tag_features
+df['Tags'] = df['Tags'].apply(tags: keep_common(tags))
+// apply preprocessing to title
+remove_html(df[‘Title’]) remove_stopwords(df[‘Title’]) remove_punc(df[‘Title’]) stem_text(df[‘Title’])
+// apply preprocessing to bodya
+remove_html(df[‘Body’]) remove_stopwords(df[‘Body’]) remove_punc(df[‘Body’]) stem_text(df[‘Body’])
+// binarize our tags
+binarizer = MultiLabelBinarizer() y_bin = binarizer.fit_transform(y)
+// vectorize
+X_title_vect = vectorizer_title.fit_transform(X_title) X_body_vect = vectorizer_body.fit_transform(X_body)
+// train test split
+X_train, X_test, y_train, y_test = train_test_split(X, y_bin, test_size = 0.2)
+// Develop the model
+svc = LinearSVC()
+clf = BinaryRelevance(svc) // fit training data clf.fit(X_train, y_train) y_pred = clf.predict(X_test) print_score(y_test, y_pred)
